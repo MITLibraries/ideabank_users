@@ -1,0 +1,26 @@
+<?php
+/**
+ * @file
+ * This is the install file of the MIT Users module. 
+ *
+ */
+
+ /**
+  * Implements hook_install().
+  *
+  */
+function ideabank_users_install() {
+    drupal_set_message(t('The Ideabank Users module was installed successfully.'));
+}
+
+/**
+ * Adjusts module weight to be one more than shib_auth.
+ *
+ */
+function ideabank_users_update_7001() {
+    // Find out the weight of the other module
+    $weight = db_query("SELECT weight FROM {system} WHERE name = 'shib_auth'")->fetchObject()->weight;
+
+    // Set our module to a weight 1 heavier, so it moves lower in execution order
+    db_query("UPDATE {system} SET weight = :weight WHERE name = 'ideabank_users'", array(':weight' => $weight + 1));
+}

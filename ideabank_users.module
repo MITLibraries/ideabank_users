@@ -1,0 +1,90 @@
+<?php
+
+function ideabank_users_form_alter(&$form, &$form_state, $form_id) {
+
+    switch ($form_id) {
+        case 'user_login':
+
+            drupal_set_title('Log In');
+
+
+            if (_login_url_html()) {
+                $form['shibboleth'] = array(
+                            array('#markup' =>
+                                '' .
+                                '<h2>For MIT Community</h2>
+                                <div class="option-descr mit">
+                                <p>MIT students, staff, and faculty members can choose the option below to login with the MIT Kerberos account.
+                                ' .
+                                _login_url_html() .
+                                '</div>'
+                            ),
+                            '#weight' => -999,
+                        );
+            }
+
+            if (!empty($_GET['destination']))
+                $cas_link = l('Sign in through MIT Alumni Infinite Connection',
+                              'cas/login',
+                              array('query' => array('destination' => $_GET['destination']), 'absolute'=>TRUE));
+            else
+                $cas_link = l('Sign in through MIT Alumni Infinite Connection',
+                              'cas/login',
+                              array('query' => array('destination' => '/'), 'absolute'=>TRUE));
+            $form['cas'] = array(
+                        array('#markup' =>
+                            '<h2>For MIT Alumni</h2>' .
+                            '<div class="option-descr alumni">' .
+                            '<p>MIT Alumni can login with the account in the Alumni Infinite Connection.</p>' .
+                            '<p>' . $cas_link . '</p></div>'
+                        ),
+                        '#weight' => -997,
+                    );
+
+            $form['localhost'] = array(
+                        array('#markup' =>
+                            '<h2>For Visitors</h2>' .
+                            '<div class="option-descr visitor">' .
+                            '<p>Choose this login option if you have an account that was assigned by the website administrator.</p>'
+                        ),
+                        '#weight' => -997,
+                    );
+
+            $form['name']['#description'] = '';
+            $form['pass']['#description'] = '';
+            $form['actions']['submit']['#value']= 'Log In';
+
+            $form['footnote'] = array(
+                    array('#markup' =>
+                        '<p>
+                        ' .
+                        l('Forgot Your Password?', 'user/password') .
+                        '<br />
+                        To reset your password for your account.
+                        </p>' .
+                        '</div>'),
+                    '#weight' => 9998,
+                    );
+
+            // hide the login form
+            // show if appended with querystring is: http://localhost/user?login-form=true
+            if (empty($_GET['login-form'])) {
+                hide($form['name']);
+                hide($form['pass']);
+                hide($form['actions']);
+                hide($form['localhost']);
+                hide($form['footnote']);
+            }
+
+            break;
+
+    }
+}
+
+
+function ideabank_users_google_appliance_query_alter(&$query) {
+
+    $query['gsa_query_params']['as_dt'] = 'i';
+    $query['gsa_query_params']['as_sitesearch'] = 'open-access.mit.edu';
+
+}
