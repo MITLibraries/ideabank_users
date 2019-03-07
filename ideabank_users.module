@@ -7,21 +7,18 @@ function ideabank_users_form_alter(&$form, &$form_state, $form_id) {
 
             drupal_set_title('Log In');
 
-
-            if (_login_url_html()) {
-                $form['shibboleth'] = array(
-                            array('#markup' =>
-                                '' .
-                                '<h2>For MIT Community</h2>
-                                <div class="option-descr mit">
-                                <p>MIT students, staff, and faculty members can choose the option below to login with the MIT Kerberos account.
-                                ' .
-                                _login_url_html() .
-                                '</div>'
-                            ),
-                            '#weight' => -999,
-                        );
-            }
+            $form['links'] = array(
+                    array('#markup' =>
+                        '<h2>For MIT Community</h2>
+                        <div class="option-descr mit">
+                        <p>MIT students, staff, and faculty members can choose the option below to login with the MIT Kerberos account.</p>' .
+                        '<p>' .
+                         l(variable_get('simplesamlphp_auth_login_link_display_name', t('Federated Log In')),variable_get('simplesamlphp_auth_login_path', 'saml_login')) .
+                         '</p>' .
+                         '</div>'
+                    ),
+                    '#weight' => -999,
+                );
 
             if (!empty($_GET['destination']))
                 $cas_link = l('Sign in through MIT Alumni Infinite Connection',

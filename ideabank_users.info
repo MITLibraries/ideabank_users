@@ -2,4 +2,6 @@ name = Ideabank users
 description = Customize the login page for ideabank applications.
 core = 7.x
 package = MIT
-version = "7.x-1.1"
+version = "7.x-1.2"
+dependencies[] = drupal:system (>= 7.40)
+dependencies[] = simplesamlphp_auth:simplesamlphp_auth
