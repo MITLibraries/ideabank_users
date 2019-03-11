@@ -13,7 +13,10 @@ function ideabank_users_form_alter(&$form, &$form_state, $form_id) {
                         <div class="option-descr mit">
                         <p>MIT students, staff, and faculty members can choose the option below to login with the MIT Kerberos account.</p>' .
                         '<p>' .
-                         l(variable_get('simplesamlphp_auth_login_link_display_name', t('Federated Log In')),variable_get('simplesamlphp_auth_login_path', 'saml_login')) .
+                         l(variable_get('simplesamlphp_auth_login_link_display_name', t('Federated Log In')),
+                            variable_get('simplesamlphp_auth_login_path', 'saml_login'),
+                            array('query' => drupal_get_destination())
+                        ) .
                          '</p>' .
                          '</div>'
                     ),
